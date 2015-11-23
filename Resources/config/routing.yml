@@ -1,0 +1,11 @@
+cu_labs_bug_catch_homepage:
+    path:     /bugcatch/test/{name}
+    defaults: { _controller: CULabsBugCatchBundle:Default:index }
+
+cu_labs_bug_catch_exception:
+    path:     /bugcatch/exception
+    defaults: { _controller: CULabsBugCatchBundle:Default:exception }
+
+cu_labs_bug_catch_error:
+    path:     /bugcatch/error
+    defaults: { _controller: CULabsBugCatchBundle:Default:error }

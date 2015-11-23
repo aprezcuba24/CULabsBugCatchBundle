@@ -1,0 +1,29 @@
+parameters:
+    cu_labs_bug_catch.client_factory.class: CULabs\BugCatch\GuzzleHttp\ClientFactory
+    cu_labs_bug_catch.error_handler.class: CULabs\BugCatch\ErrorHandler\ErrorHandler
+    cu_labs_bug_catch.exception_listener.class: CULabs\BugCatchBundle\Listener\KernelListener
+
+services:
+    cu_labs_bug_catch.client_factory:
+        class: %cu_labs_bug_catch.client_factory.class%
+        arguments:
+            - %cu_labs_bug_catch.app_key%
+
+    cu_labs_bug_catch.client:
+        class: GuzzleHttp\Client
+        factory: [@cu_labs_bug_catch.client_factory, getClient]
+
+    cu_labs_bug_catch.error_handler:
+        class: %cu_labs_bug_catch.error_handler.class%
+        arguments:
+            - @cu_labs_bug_catch.client
+
+    cu_labs_bug_catch.exception_listener:
+        class: %cu_labs_bug_catch.exception_listener.class%
+        arguments:
+            - @cu_labs_bug_catch.error_handler
+            - @request_stack
+            - @security.token_storage
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onHttpException }
+            - { name: kernel.event_listener, event: console.exception, method: onConsoleException }
