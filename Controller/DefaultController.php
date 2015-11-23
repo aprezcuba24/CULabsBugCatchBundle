@@ -4,25 +4,17 @@ namespace CULabs\BugCatchBundle\Controller;
 
 use GuzzleHttp\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
-    public function indexAction($name = 'Renier')
+    public function formAction(Request $request)
     {
-        $exception = new \Exception('Mostrar');
-        $response = $this->get('cu_labs_bug_catch.client')->request('POST', 'errors.json', [
-            'form_params' => [
-                'code'          => 4,
-                'message'       => $exception->getMessage(),
-                'file'          => $exception->getFile(),
-                'line'          => $exception->getLine(),
-                'traceAsString' => $exception->getTraceAsString(),
-            ],
-        ]);
+        if ($request->isMethod('POST')) {
+            throw new \Exception();
+        }
 
-        dump($response->getBody()->getContents());
-
-        return $this->render('CULabsBugCatchBundle:Default:index.html.twig', array('name' => $name));
+        return $this->render('@CULabsBugCatch/Default/form.html.twig');
     }
 
     /**

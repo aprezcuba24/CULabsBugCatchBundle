@@ -8,6 +8,7 @@ namespace CULabs\BugCatchBundle\Listener;
 
 use CULabs\BugCatch\ErrorHandler\ErrorHandler;
 use Symfony\Component\Console\Event\ConsoleExceptionEvent;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -39,11 +40,15 @@ class KernelListener
             return;
         }
         $masterRequest = $this->requestStack->getMasterRequest();
+        $files = [];
+        /**@var $file UploadedFile*/
+        foreach ($masterRequest->files->all() as $file) {
+            $files[] = $this->processFile($file);
+        }
         $this->errorHandler->setCookie($masterRequest->cookies->all());
-        $this->errorHandler->setFiles($masterRequest->files->all());
+        $this->errorHandler->setFiles($files);
         $this->errorHandler->setGet($masterRequest->query->all());
-        $this->errorHandler->setGet($masterRequest->request->all());
-
+        $this->errorHandler->setPost($masterRequest->request->all());
         $roles = [];
         foreach ($this->tokenStorage->getToken()->getRoles() as $role) {
             $roles[] = $role->getRole();
@@ -60,5 +65,22 @@ class KernelListener
         ]);
 
         $this->errorHandler->notifyException($exception);
+    }
+
+    protected function processFile(UploadedFile $file)
+    {
+        $result = [];
+        $reflection = new \ReflectionObject($file);
+        foreach ($reflection->getMethods() as $method) {
+            try {
+                $value = $method->invoke($file);
+                if (is_object($value)) {
+                    continue;
+                }
+                $result[$method->getName()] = $value;
+            } catch (\Exception $e) {}
+        }
+
+        return $result;
     }
 }

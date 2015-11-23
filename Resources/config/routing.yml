@@ -1,6 +1,6 @@
-cu_labs_bug_catch_homepage:
-    path:     /bugcatch/test/{name}
-    defaults: { _controller: CULabsBugCatchBundle:Default:index }
+cu_labs_bug_catch_form:
+    path:     /bugcatch/exception/form
+    defaults: { _controller: CULabsBugCatchBundle:Default:form }
 
 cu_labs_bug_catch_exception:
     path:     /bugcatch/exception
