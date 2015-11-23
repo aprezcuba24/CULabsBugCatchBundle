@@ -1,0 +1,24 @@
+{
+    "name": "culabs/bugcatch-bundle",
+    "type": "symfony-bundle",
+    "description": "Integrate BugCatch in symfony2",
+    "keywords": ["symfony2-bundle", "Bug", "BugCatch"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Renier Ricardo Figueredo",
+            "email": "aprezcuba24@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "culabs/bugcatch": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "CULabs\\BugCatchBundle": ""
+        }
+    },
+    "target-dir": "CULabs/BugCatchBundle"
+}
