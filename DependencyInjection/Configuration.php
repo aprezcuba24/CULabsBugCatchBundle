@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('activate')->defaultTrue()->end()
                 ->scalarNode('app_key')->isRequired()->end()
             ->end()
         ;

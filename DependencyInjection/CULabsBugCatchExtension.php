@@ -26,5 +26,6 @@ class CULabsBugCatchExtension extends Extension
         $loader->load('services.yml');
 
         $container->setParameter('cu_labs_bug_catch.app_key', $config['app_key']);
+        $container->setParameter('cu_labs_bug_catch.activate', $config['activate']);
     }
 }

@@ -17,6 +17,7 @@ services:
         class: %cu_labs_bug_catch.error_handler.class%
         arguments:
             - @cu_labs_bug_catch.client
+            - %cu_labs_bug_catch.activate%
 
     cu_labs_bug_catch.exception_listener:
         class: %cu_labs_bug_catch.exception_listener.class%
