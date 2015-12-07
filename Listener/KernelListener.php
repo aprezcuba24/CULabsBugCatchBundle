@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class KernelListener
@@ -49,21 +50,23 @@ class KernelListener
         $this->errorHandler->setFiles($files);
         $this->errorHandler->setGet($masterRequest->query->all());
         $this->errorHandler->setPost($masterRequest->request->all());
-        $roles = [];
-        foreach ($this->tokenStorage->getToken()->getRoles() as $role) {
-            $roles[] = $role->getRole();
+        $token = $this->tokenStorage->getToken();
+        if ($token instanceof TokenInterface) {
+            $roles = [];
+            foreach ($token->getRoles() as $role) {
+                $roles[] = $role->getRole();
+            }
+            $user = $token->getUser();
+            if ($user instanceof UserInterface) {
+                $username = $user->getUsername();
+            } else {
+                $username = $user;
+            }
+            $this->errorHandler->setUserData([
+                'roles' => $roles,
+                'user'  => $username,
+            ]);
         }
-        $user = $this->tokenStorage->getToken()->getUser();
-        if ($user instanceof UserInterface) {
-            $username = $user->getUsername();
-        } else {
-            $username = $user;
-        }
-        $this->errorHandler->setUserData([
-            'roles' => $roles,
-            'user'  => $username,
-        ]);
-
         $this->errorHandler->notifyException($exception);
     }
 
