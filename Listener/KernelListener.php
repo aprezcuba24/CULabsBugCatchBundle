@@ -70,8 +70,11 @@ class KernelListener
         $this->errorHandler->notifyException($exception);
     }
 
-    protected function processFile(UploadedFile $file)
+    protected function processFile($file)
     {
+        if (!is_object($file)) {
+            return;
+        }
         $result = [];
         $reflection = new \ReflectionObject($file);
         foreach ($reflection->getMethods() as $method) {
