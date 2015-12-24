@@ -11,7 +11,7 @@ class DefaultController extends Controller
     public function formAction(Request $request)
     {
         if ($request->isMethod('POST')) {
-            throw new \Exception();
+            throw new \Exception('Exception in the form, Test BugCatch');
         }
 
         return $this->render('@CULabsBugCatch/Default/form.html.twig');
