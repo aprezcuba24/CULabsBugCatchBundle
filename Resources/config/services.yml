@@ -1,5 +1,5 @@
 parameters:
-    cu_labs_bug_catch.client_factory.class: CULabs\BugCatch\GuzzleHttp\ClientFactory
+    cu_labs_bug_catch.client_factory.class: CULabs\BugCatch\Client\ClientFactory
     cu_labs_bug_catch.error_handler.class: CULabs\BugCatch\ErrorHandler\ErrorHandler
     cu_labs_bug_catch.exception_listener.class: CULabs\BugCatchBundle\Listener\KernelListener
 
