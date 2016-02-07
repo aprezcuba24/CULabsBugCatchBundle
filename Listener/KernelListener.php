@@ -41,10 +41,10 @@ class KernelListener
             return;
         }
         $masterRequest = $this->requestStack->getMasterRequest();
-        $files = [];
+        $files = array();
         /**@var $file UploadedFile*/
         foreach ($masterRequest->files->all() as $file) {
-            $files[] = $this->processFile($file);
+            $files[] = $this->errorHandler->processObject($file, 1);
         }
         $this->errorHandler->setCookie($masterRequest->cookies->all());
         $this->errorHandler->setFiles($files);
@@ -52,7 +52,7 @@ class KernelListener
         $this->errorHandler->setPost($masterRequest->request->all());
         $token = $this->tokenStorage->getToken();
         if ($token instanceof TokenInterface) {
-            $roles = [];
+            $roles = array();
             foreach ($token->getRoles() as $role) {
                 $roles[] = $role->getRole();
             }
@@ -62,31 +62,11 @@ class KernelListener
             } else {
                 $username = $user;
             }
-            $this->errorHandler->setUserData([
-                'roles' => $roles,
-                'user'  => $username,
-            ]);
+            $this->errorHandler->setUserData(array(
+              'roles' => $roles,
+              'user'  => $username,
+            ));
         }
         $this->errorHandler->notifyException($exception);
-    }
-
-    protected function processFile($file)
-    {
-        if (!is_object($file)) {
-            return;
-        }
-        $result = [];
-        $reflection = new \ReflectionObject($file);
-        foreach ($reflection->getMethods() as $method) {
-            try {
-                $value = $method->invoke($file);
-                if (is_object($value)) {
-                    continue;
-                }
-                $result[$method->getName()] = $value;
-            } catch (\Exception $e) {}
-        }
-
-        return $result;
     }
 }
